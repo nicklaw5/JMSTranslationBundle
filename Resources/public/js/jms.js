@@ -50,10 +50,6 @@ function JMSTranslationManager(updateMessagePath, isWritable)
         handlers: function(JMS)
         {
             $(JMS.domain.selector).change(function() {
-                if(this.name === 'locale'){
-                    var filter = $(JMS.messageFilter.selector).val();
-                    $(this).parent().attr('action', $(this).parent().attr('action') + "#" + filter);
-                }
                 $(this).parent().submit();
             });
         }
@@ -179,11 +175,6 @@ function JMSTranslationManager(updateMessagePath, isWritable)
         $(document).ready(function(event) {
             JMS.domain.handlers(JMS);
             JMS.truncator.truncate(JMS);
-            $(JMS.messageFilter.selector).keyup(function(){
-                JMS.messageFilter.filter();
-            });
-            JMS.messageFilter.init();
-            JMS.messageFilter.filter();
             if(JMS.isWritable)
             {
                 JMS.writable(JMS);
@@ -203,32 +194,5 @@ function JMSTranslationManager(updateMessagePath, isWritable)
                 JMS.translation.focus(event, JMS);
             })
         ;
-    };
-
-    this.messageFilter = {
-        selector: "#filter",
-        init: function(){
-            $(JMS.messageFilter.selector).val(window.location.hash.substr(1));
-        },
-        filter: function () {
-            var filterString = $(JMS.messageFilter.selector).val().trim().replace(/[-[\]{}()+?,\\^$|#\s]/g, "\\$&");
-            var regExp = new RegExp(".*" + filterString + ".*", "i");
-            window.location.hash = filterString;
-            if (filterString !== "") {
-                $(".messageRow").each(function () {
-                    var id = this.id.substr(4);
-                    if (id.match(regExp)) {
-                        $(this).show();
-                    } else {
-                        $(this).hide();
-                    }
-                });
-
-            } else {
-                $(".messageRow").each(function () {
-                    $(this).show();
-                });
-            }
-        }
     };
 };
